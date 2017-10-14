@@ -23,7 +23,9 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "storage"
+    "storage",
+    "http://localhost/*",
+    "contextMenus"
   ],
 
   "page_action": {
