@@ -1,7 +1,6 @@
 node_modules
 temp
 .tmp
-scripts/*.js
 dist
 .sass-cache
 .DS_Store
