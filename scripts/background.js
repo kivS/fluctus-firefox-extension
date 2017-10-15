@@ -212,6 +212,19 @@ browser.notifications.onClicked.addListener(notif =>{
 })
 
 
+browser.notifications.onShown.addListener(notif =>{
+
+    // for no server error the user should have time!
+    if(notif == NO_SERVER_ERROR_NOTIF_ID) return;
+
+    // automatically clear notification after 2.5 seconds
+    const autoClearTimeOut = setTimeout(() =>{
+        browser.notifications.clear(notif);
+        clearTimeout(autoClearTimeOut);
+    }, 2500)
+    
+});
+
 
 
 
@@ -242,7 +255,7 @@ function openVideoRequest(url, currentTime, hostname=null){
 
 
     if(!media_provider){
-        alert(browser.i18n.getMessage('mediaProviderNotSupportedError'));
+        alertUser("", browser.i18n.getMessage('mediaProviderNotSupportedError'));
         return;
     }
 
@@ -252,7 +265,7 @@ function openVideoRequest(url, currentTime, hostname=null){
 
     // make sure payload has at least player_type and one more arg like the url of the request
     if(Object.keys(payload).length <= 1){
-        alert(browser.i18n.getMessage('urlNotSupportedError'));
+        alertUser("", browser.i18n.getMessage('urlNotSupportedError'));
         return;
     }
 
@@ -270,7 +283,7 @@ function openVideoRequest(url, currentTime, hostname=null){
         console.info('Video start request sent!');
 
         if(response_data.status != "ok"){
-            alert(response_data.status);    
+            alertUser("", response_data.status);    
         }    
         
     })
@@ -481,7 +494,7 @@ function getCleanedUrl(url_candidate){
             return [hostname, clean_url_candidate];
 
         }catch(e){
-            alert(browser.i18n.getMessage("urlNotSupportedError"));
+            alertUser("", browser.i18n.getMessage("urlNotSupportedError"));
         }
     }
 
