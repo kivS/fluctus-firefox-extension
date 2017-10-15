@@ -27,9 +27,7 @@ const config = {
 }
 
 let NATIVE_APP_PORT = null;
-let current_tab = null;
-
-
+const NO_SERVER_ERROR_NOTIF_ID = "fluctus_says_nope";
 
 
 
@@ -49,6 +47,12 @@ browser.storage.sync.get(config.STORAGE_KEY_NATIVE_APP_PORT).then(result =>{
     console.log('Using default native port:', NATIVE_APP_PORT);
 })
 
+
+
+//*****************************************************
+//               Events
+//
+//*****************************************************
 
 
 // On install or upgrade
@@ -191,6 +195,25 @@ browser.contextMenus.onClicked.addListener((object_info, tab) =>{
 });
 
 
+/**
+ * Handle notifications click event
+ */
+browser.notifications.onClicked.addListener(notif =>{
+    console.log('notification clicked:', notif);
+
+    switch (notif) {
+        case NO_SERVER_ERROR_NOTIF_ID:
+            browser.tabs.create({ url: config.NATIVE_APP_INSTALL_URL });
+            break;        
+    }
+
+    // clear notification
+    browser.notifications.clear(notif);
+})
+
+
+
+
 
 //*****************************************************
 //               Native app functions
@@ -306,7 +329,7 @@ function pingNativeAppServer(requested_video_url, requested_video_time){
 
             }else{
                 // No server found
-                showNoServerErrorMsg();
+                alertUser(NO_SERVER_ERROR_NOTIF_ID, browser.i18n.getMessage("noServerError"));
             }
         })
         .catch(err =>{
@@ -494,17 +517,16 @@ function parseUrl(url){
 
 
 /**
- * Shows dialog to user if server is not alive
- * and lets link to download page for the native app
- *
+ * Send notification to the user
+ * @param  notification_id 
+ * @param  message        
  */
-function showNoServerErrorMsg(){
-    if(confirm(browser.i18n.getMessage("noServerError"))){
-        browser.tabs.create({ url: config.NATIVE_APP_INSTALL_URL });
-    }
+function alertUser(notification_id, message){
+    browser.notifications.create(notification_id, {
+       "type": "basic",
+       "iconUrl": browser.extension.getURL("icons/icon-64.png"),
+       "title": "Fluctus",
+       "message": message
+    });
 }
-
-
-
-
 

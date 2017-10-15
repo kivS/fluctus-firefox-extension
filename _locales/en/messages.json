@@ -16,7 +16,7 @@
     "description": "Title for pageAction and context menu title "
   },
    "noServerError": {
-    "message": "Companion app is not running or maybe it's not installed.. \n\n Install companion app?",
+    "message": "Companion app is not running or maybe it's not installed.. \n\n Click here to install companion app",
     "description": "Error for when extension doesn't find local server"
   },
    "urlNotSupportedError": {
