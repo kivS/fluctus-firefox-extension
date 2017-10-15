@@ -309,45 +309,47 @@ function openVideoRequest(url, currentTime, hostname=null){
  * @param requested_video_time 
  */
 function pingNativeAppServer(requested_video_url, requested_video_time){
-
-    let ping_urls = config.SUPPORTED_PORTS.map(port =>{
+    // make sure we start by the first port defined in config
+    let ping_urls = config.SUPPORTED_PORTS.reverse().map(port =>{
         return [`http://localhost:${port}/ping`, port];
     })
 
-    Promise.all(ping_urls.map(url =>
-            fetch(url[0].toString())
+    // return single promise from array of promises looking for the companion app
+    Promise.all(ping_urls.map(ping_url => {
+
+        return new Promise((resolve, reject) =>{
+
+            fetch( ping_url[0].toString() )
                 .then(response =>{
                     if(response.ok){
-                        // If server is found let's return the port
-                        return url[1];
+                        // if port is found lets skip all other promises by rejecting 'father promise'
+                        reject(ping_url[1]);
                     }
                 })
                 .catch(error =>{
-                    console.warn(`${url[0]}: was not the chosen one!`);
-                    return null;
+                    console.warn(`No one behind port ${ping_url[1]}!`);
+                    resolve('nope');
                 })
-        ))
-        .then(responses =>{
-            // Check promises for port
-            let port = responses.filter(r => r != null)[0];
-            if(port){
-                console.log('pinged server successfully on port: ', port);
-
-                // Cache server port
-                NATIVE_APP_PORT = port;
-                setNativeAppPortToStorage(port);
-
-                // Send POST request to open video
-                openVideoRequest(requested_video_url ,requested_video_time);
-
-            }else{
-                // No server found
-                alertUser(NO_SERVER_ERROR_NOTIF_ID, browser.i18n.getMessage("noServerError"));
-            }
         })
-        .catch(err =>{
-            console.error('Something went wrong...', err);
-        });
+        
+
+    }))
+    .then(responses =>{
+        console.log('Companion app not found!');
+
+        // No server found
+        alertUser(NO_SERVER_ERROR_NOTIF_ID, chrome.i18n.getMessage("noServerError"));
+        
+    })
+    .catch(port =>{
+        console.debug('Companion app found behind port:', port);
+        // Cache server port
+        NATIVE_APP_PORT = port;
+        setNativeAppPortToStorage(port);
+
+        // Send POST request to open video
+        openVideoRequest(requested_video_url ,requested_video_time);
+    });
 }
 
 
