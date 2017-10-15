@@ -129,13 +129,19 @@ browser.pageAction.onClicked.addListener( tab => {
     console.debug('page_action clicked..', tab);
 
     // pause current video
-    browser.tabs.executeScript(null, {code: "document.getElementsByTagName('video')[0].pause()"});
+    
+    browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length > 1) { document.getElementsByTagName('video')[0].pause() }"});
+
+   
 
     // get current video time
     new Promise((resolve) => {
-        browser.tabs.executeScript(null, {code: "document.getElementsByTagName('video')[0].currentTime"}, result =>{
-            resolve(parseInt(result[0]));
-        });
+        
+        browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length > 1) { document.getElementsByTagName('video')[0].currentTime }"}, result =>{
+           resolve(parseInt(result[0]));
+        }); 
+
+     
 
     }).then(currentTime =>{
             console.debug('current video time: ', currentTime);
@@ -390,7 +396,7 @@ function getPayload(media_provider, url, currentTime){
 
         case "vimeo":
             // video url
-            payload['video_url'] = url;
+            payload['video_urkl'] = url;
             // video time
             if(currentTime) payload['time'] = currentTime;
         break;
