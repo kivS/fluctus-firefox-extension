@@ -134,14 +134,14 @@ browser.pageAction.onClicked.addListener( tab => {
 
     // pause current video
     
-    browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length > 1) { document.getElementsByTagName('video')[0].pause() }"});
+    browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length >= 1) { document.getElementsByTagName('video')[0].pause() }"});
 
    
 
     // get current video time
     new Promise((resolve) => {
         
-        browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length > 1) { document.getElementsByTagName('video')[0].currentTime }"}, result =>{
+        browser.tabs.executeScript(null, {code: "if(document.getElementsByTagName('video').length >= 1) { document.getElementsByTagName('video')[0].currentTime }"}, result =>{
            resolve(parseInt(result[0]));
         }); 
 
