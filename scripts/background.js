@@ -395,7 +395,7 @@ function getMediaProvider(url){
 
         host.alts.forEach(alt =>{
             // build reg rexp to match host in url
-            let match_exp = RegExp(`(?:https:\\/\\/)?(?:www\\.)?${alt}(?:.+)?`,'g');
+            let match_exp = RegExp(String.raw`(?:https:\/\/)?(?:www\.)?${alt}(?:.+)?`,'g');
             
             console.debug('Match RegExp: ', match_exp);
 
@@ -460,7 +460,7 @@ function getPayload(media_provider, url, currentTime){
             if(channel_regexp_match) payload['channel_id'] = channel_regexp_match[1];
 
             // get video id
-            let video_regexp_match = url.match(RegExp('https://go.twitch.tv/videos/(\\d+$)'));
+            let video_regexp_match = url.match(RegExp(String.raw`https://go.twitch.tv/videos/(\d+$)`));
             console.log('video match regexp:', video_regexp_match);
             if(video_regexp_match) payload['video_id'] = `v${video_regexp_match[1]}`;
 
