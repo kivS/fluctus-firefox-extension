@@ -1,8 +1,7 @@
-console.log('Lift off!');
-
 
 // Define config constant
 const config = {
+    debug: false,
     SUPPORTED_PORTS: [8791,8238,8753],
     SUPPORTED_HOSTNAMES:[
         {
@@ -25,6 +24,16 @@ const config = {
     NATIVE_APP_INSTALL_URL: 'https://github.com/kivS/Fluctus/releases',
     STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port',
 }
+
+if(!config.debug){
+    Object.keys(console).forEach(function(key){
+        // allow only logs with error level
+        if(key == 'error') return;
+        console[key] = function(){};
+    })
+}
+
+console.log('Lift off!');
 
 let NATIVE_APP_PORT = null;
 const NO_SERVER_ERROR_NOTIF_ID = "fluctus_says_nope";
