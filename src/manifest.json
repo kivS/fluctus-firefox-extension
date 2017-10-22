@@ -1,7 +1,7 @@
 {
   "applications": {
     "gecko": {
-      "id": "fluctus@https://kivs.github.io/Fluctus"
+      "id": "Fluctus@kivs.github.io"
     }
   },
   "name": "__MSG_appName__",
