@@ -1,0 +1,15 @@
+{
+  "name": "floating-dog-firefox",
+  "version": "1.0.0",
+  "main": "src/manifest.json",
+  "repository": "git@github.com:kivS/fluctus-firefox-extension.git",
+  "author": "Vik Borges <v1k@protonmail.com>",
+  "license": "MIT",
+
+  "scripts":{
+    "dev": "web-ext -s src run --url about:debugging#addons",
+    "lint": "web-ext -s src lint",
+    "build": "web-ext -s src build --overwrite-dest",
+    "sign": ""
+  }
+}
